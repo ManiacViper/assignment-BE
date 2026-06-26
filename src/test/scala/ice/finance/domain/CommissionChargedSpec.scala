@@ -1,0 +1,37 @@
+package ice.finance.domain
+
+import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
+import org.scalatest.matchers.should.Matchers._
+import org.scalatest.wordspec.AnyWordSpec
+
+class CommissionChargedSpec extends AnyWordSpec {
+
+  "commission charged" should {
+    "calculate the commission correctly" when {
+      "its equal to or under 1000" in {
+        val underThousand = EqualOrUnderThousand(900).calculate
+        val equalToThousand = EqualOrUnderThousand(1000).calculate
+
+        underThousand mustBe 90.00
+        equalToThousand mustBe 100.00
+      }
+
+      "its more than 1000 and equal or under 3000" in {
+        val moreThanThousand = EqualOrUnderThreeThousand(2001).calculate
+        val equalToThreeThousand = EqualOrUnderThreeThousand(3000).calculate
+
+        moreThanThousand mustBe 100.05
+        equalToThreeThousand mustBe 150.00
+      }
+
+      "its more than 3000 and equal or under a million" in {
+        val moreThanThousand = AboveThreeThousand(3001).calculate
+        val equalToThreeThousand = AboveThreeThousand(1000000).calculate
+
+        moreThanThousand mustBe 30.01
+        equalToThreeThousand mustBe 10000.00
+      }
+    }
+  }
+
+}
