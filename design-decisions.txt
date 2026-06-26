@@ -1,0 +1,15 @@
+- domain package added
+so we have all the business domain classes here
+these domain classes will hold useful business fields and rules and have no concern over technical mechanisms
+this makes it easier to seperate them from dto objects for either db or rest api that exist solely for data transfer
+
+- service package added
+we can add services here that can hold together other services and/or repositories that we need to call
+this package ensures all services are bundled together
+
+- added a sealed trait for classifying the different ranges of total amounts
+so that they are reflected by different types and easier to pattern match if needed for some other processing in the future
+
+- calculation of commission in domain
+as the domain holds all the useful business fields, they should also contain any rules related to the business like calculations
+it makes it easier to check all the rules in one location and to test purely the business logic easily without other technical mechanisms as noise
