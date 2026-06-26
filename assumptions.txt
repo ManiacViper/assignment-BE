@@ -1,0 +1,1 @@
+- the rate will not be a decimal amount, example 10.5%
