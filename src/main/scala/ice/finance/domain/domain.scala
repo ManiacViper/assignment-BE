@@ -9,17 +9,20 @@ sealed trait CommissionCharged {
   def calculate: BigDecimal =
     BigDecimal(rate) / BigDecimal(100) * BigDecimal(amount)
 }
+
 object CommissionCharged {
-  def fromServiceRendered(serviceRendered: ServiceRendered): Either[String, CommissionCharged] =
-    serviceRendered.totalAmount match {
+  def fromTotalAmount(amount: Int): Either[String, CommissionCharged] =
+    amount match {
+      case value if value < 0 =>
+        Left(s"$amount is invalid, amount should be in the range of 0 to a million")
+      case value if value > 1000000 =>
+        Left(s"$amount is invalid, amount should be in the range of 0 to a million")
       case value if value <= 1000 =>
         Right(EqualOrUnderThousand(value))
       case value if value > 1000 && value <= 3000 =>
         Right(EqualOrUnderThreeThousand(value))
       case value if value > 3000 && value <= 1000000 =>
         Right(AboveThreeThousand(value))
-      case _ =>
-        Left("amount is invalid")
     }
 }
 

@@ -34,4 +34,27 @@ class CommissionChargedSpec extends AnyWordSpec {
     }
   }
 
+  "converting from service rendered" should {
+    "return the correct commission charged" when {
+      "under or equal to 1000 but still a positive number" in {
+        val Right(resultForThousand) = CommissionCharged.fromTotalAmount(1000)
+        val Right(resultForUnderThousand) = CommissionCharged.fromTotalAmount(10)
+
+        resultForThousand mustBe EqualOrUnderThousand(1000)
+        resultForUnderThousand mustBe EqualOrUnderThousand(10)
+      }
+    }
+
+    "return an error" when {
+      "there is a negative number" in {
+        val Left(errorResult) = CommissionCharged.fromTotalAmount(-1)
+        errorResult mustBe "-1 is invalid, amount should be in the range of 0 to a million"
+      }
+      "its more than a million" in {
+        val Left(errorResult) = CommissionCharged.fromTotalAmount(1000001)
+        errorResult mustBe "1000001 is invalid, amount should be in the range of 0 to a million"
+      }
+    }
+  }
+
 }
