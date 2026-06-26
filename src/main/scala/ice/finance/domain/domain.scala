@@ -2,9 +2,9 @@ package ice.finance.domain
 case class ServiceDetails(
                           id: Long,
                           totalAmount: Int)
-case class ServiceCommissionsCalculated(id: Long, amount: Int)
-case class CommissionCalculator(amount: Int) {
-  private val rate = amount match {
+case class ServiceCommissionsCalculated(id: Long, commissionAmount: Int)
+case class CommissionCalculator(totalAmount: Int) {
+  private val rate = totalAmount match {
     case value if value <= 1000 =>
       10
     case value if value > 1000 && value <= 3000 =>
@@ -13,7 +13,7 @@ case class CommissionCalculator(amount: Int) {
       1
   }
   def calculate: BigDecimal =
-    BigDecimal(rate) / BigDecimal(100) * BigDecimal(amount)
+    BigDecimal(rate) / BigDecimal(100) * BigDecimal(totalAmount)
 }
 object CommissionCalculator {
   def fromTotalAmount(amount: Int): Either[String, CommissionCalculator] =
