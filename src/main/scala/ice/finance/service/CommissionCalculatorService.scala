@@ -1,9 +1,9 @@
 package ice.finance.service
 
-import ice.finance.domain.{CommissionCalculated, ServiceRendered}
+import ice.finance.domain.{ServiceCommissionsCalculated, ServiceDetails}
 
 trait CommissionCalculatorService {
 
-  def getCalculation(services: List[ServiceRendered]): List[CommissionCalculated]
+  def getCalculation(services: List[ServiceDetails]): List[ServiceCommissionsCalculated]
 
 }
