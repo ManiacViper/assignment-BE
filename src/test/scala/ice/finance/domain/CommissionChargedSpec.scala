@@ -9,9 +9,11 @@ class CommissionChargedSpec extends AnyWordSpec {
   "commission charged" should {
     "calculate the commission correctly" when {
       "its equal to or under 1000" in {
+        val zero = EqualOrUnderThousand(0).calculate
         val underThousand = EqualOrUnderThousand(900).calculate
         val equalToThousand = EqualOrUnderThousand(1000).calculate
 
+        zero mustBe 0.0
         underThousand mustBe 90.00
         equalToThousand mustBe 100.00
       }
@@ -35,24 +37,43 @@ class CommissionChargedSpec extends AnyWordSpec {
   }
 
   "converting from service rendered" should {
-    "return the correct commission charged" when {
-      "under or equal to 1000 but still a positive number" in {
-        val Right(resultForThousand) = CommissionCharged.fromTotalAmount(1000)
-        val Right(resultForUnderThousand) = CommissionCharged.fromTotalAmount(10)
-
-        resultForThousand mustBe EqualOrUnderThousand(1000)
-        resultForUnderThousand mustBe EqualOrUnderThousand(10)
-      }
-    }
 
     "return an error" when {
-      "there is a negative number" in {
+      "the amount is a negative number" in {
         val Left(errorResult) = CommissionCharged.fromTotalAmount(-1)
         errorResult mustBe "-1 is invalid, amount should be in the range of 0 to a million"
       }
       "its more than a million" in {
         val Left(errorResult) = CommissionCharged.fromTotalAmount(1000001)
         errorResult mustBe "1000001 is invalid, amount should be in the range of 0 to a million"
+      }
+    }
+
+    "return the correct commission charged" when {
+      "under or equal to 1000 but still a positive number" in {
+        val Right(resultForZero) = CommissionCharged.fromTotalAmount(0)
+        val Right(resultForUnderThousand) = CommissionCharged.fromTotalAmount(10)
+        val Right(resultForThousand) = CommissionCharged.fromTotalAmount(1000)
+
+        resultForZero mustBe EqualOrUnderThousand(0)
+        resultForUnderThousand mustBe EqualOrUnderThousand(10)
+        resultForThousand mustBe EqualOrUnderThousand(1000)
+      }
+
+      "its more than 1000 and less than or equal 3000" in {
+        val Right(resultForMoreThanThousand) = CommissionCharged.fromTotalAmount(1001)
+        val Right(resultForUnderThousand) = CommissionCharged.fromTotalAmount(3000)
+
+        resultForMoreThanThousand mustBe EqualOrUnderThreeThousand(1001)
+        resultForUnderThousand mustBe EqualOrUnderThreeThousand(3000)
+      }
+
+      "its more than 3000 and less than or equal to million" in {
+        val Right(resultAboveThreeThousand) = CommissionCharged.fromTotalAmount(3001)
+        val Right(resultForAMillion) = CommissionCharged.fromTotalAmount(1000000)
+
+        resultAboveThreeThousand mustBe AboveThreeThousand(3001)
+        resultForAMillion mustBe AboveThreeThousand(1000000)
       }
     }
   }
