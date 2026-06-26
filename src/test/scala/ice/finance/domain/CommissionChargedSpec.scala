@@ -60,7 +60,7 @@ class CommissionChargedSpec extends AnyWordSpec {
         resultForThousand mustBe EqualOrUnderThousand(1000)
       }
 
-      "its more than 1000 and less than or equal 3000" in {
+      "its more than 1000 and less than or equal to 3000" in {
         val Right(resultForMoreThanThousand) = CommissionCharged.fromTotalAmount(1001)
         val Right(resultForUnderThousand) = CommissionCharged.fromTotalAmount(3000)
 
