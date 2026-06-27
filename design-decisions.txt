@@ -1,18 +1,18 @@
-- domain package added
+- domain package added  (should not depend on service or repository or stream package classes)
 so we have all the business domain classes here
 these domain classes will hold useful business fields and rules and have no concern over technical mechanisms
 this makes it easier to seperate them from dto objects for either db or rest api that exist solely for data transfer
-
-- service package added
-we can add services here that can hold together other services and/or repositories that we need to call
-this package ensures all services are bundled together
 
 - calculation of commission in domain
 as the domain holds all the useful business fields, it should also contain any rules related to the business like calculations
 the above makes it easier to check all the rules in one location and to test purely the business logic easily without other technical mechanisms as noise
 
-- repostiory package added
+- service package added (should not depend on stream)
+we can add services here that can hold together other services and/or repositories that we need to call
+this package ensures all services are bundled together
+
+- repository package added (should not depend on domain or service or stream package classes)
 so we can have a location to have all classes that deal access or updates to the data for the app
 
-- stream package added
+- stream package added (should depend on service package only)
 so all classes that coordinate the stream is added there
