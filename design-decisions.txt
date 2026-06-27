@@ -10,3 +10,9 @@ this package ensures all services are bundled together
 - calculation of commission in domain
 as the domain holds all the useful business fields, it should also contain any rules related to the business like calculations
 the above makes it easier to check all the rules in one location and to test purely the business logic easily without other technical mechanisms as noise
+
+- repostiory package added
+so we can have a location to have all classes that deal access or updates to the data for the app
+
+- stream package added
+so all classes that coordinate the stream is added there

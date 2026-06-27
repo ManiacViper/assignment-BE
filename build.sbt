@@ -12,5 +12,7 @@ lazy val root = (project in file("."))
       "co.fs2"              %% s"fs2-io"     % "3.9.2",
       "com.disneystreaming" %% "weaver-cats" % "0.8.3" % Test,
       "org.scalatest" %% "scalatest" % "latest.integration" % Test
-    )
+    ),
+//    testFrameworks := Seq(new TestFramework("weaver.framework.CatsEffect"))
+
   )

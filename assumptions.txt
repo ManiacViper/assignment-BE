@@ -1,1 +1,2 @@
 - the rate will not be a decimal amount, example 10.5%
+- assuming the list wiill be provided to the system with a csv file
