@@ -11,7 +11,7 @@ object StreamingApp {
     rowValidatorService: RowValidatorService,
     commissionCalculatorService: CommissionCalculatorService
   ): IO[Unit] = {
-    FileReaderRepository("services.csv")
+    val calculatedCommissionsStream = FileReaderRepository("services.csv")
       .getLines()
       .map { row =>
         rowValidatorService
@@ -33,6 +33,9 @@ object StreamingApp {
       .map { calculated =>
         s"${calculated.clientId},${calculated.id},${calculated.commissionAmount}\n"
       }
+
+    val csvHeadersStream = Stream.emit("client_id,calculated_id,commission_amount\n")
+    (csvHeadersStream ++ calculatedCommissionsStream)
       .through(text.utf8.encode)
       .through(Files[IO].writeAll(Path("calculated.csv")))
       .compile
