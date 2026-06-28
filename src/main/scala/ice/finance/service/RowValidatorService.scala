@@ -26,7 +26,7 @@ object RowValidatorService {
         amountConverted <- Either
           .catchNonFatal(totalAmount.toInt)
           .leftMap(_ => s"totalAmount=$totalAmount, should be an integer")
-        validatedAmount <- checkNegativeNumber(amountConverted, "totalAmount")
+        _ <- checkNegativeNumber(amountConverted, "totalAmount")
         serviceDetails = ServiceDetails(clientId, validatedServiceId, amountConverted)
       } yield serviceDetails)
   }
