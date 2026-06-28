@@ -1,9 +1,6 @@
 package ice.finance.repository
 
-import cats.effect.IO
 import weaver._
-
-import java.io.FileNotFoundException
 
 object ServicesFileReaderRepositorySpec extends SimpleIOSuite {
 
