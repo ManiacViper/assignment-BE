@@ -7,8 +7,9 @@ assumptions
 - client id should be tracked for each service commission charge as more files with different clients can be added
 
 simplifications
-- reading the csv file from the app itself but in the real app,
+- reading the services.csv file from the app itself but in the real app,
     it would have a mechanism to take it from a remote storage like S3 or something similar
 - will assume the columns are in order always in the csv file
 - logging results but in the real app we would write it somewhere in remote storage
+- writes the calculated commissions to a csv file called calculated.csv to local app directory, this would be a remote storage write in the real app
 

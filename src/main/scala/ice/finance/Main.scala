@@ -1,9 +1,9 @@
 package ice.finance
 
 import cats.effect.IOApp
-import ice.finance.service.RowValidatorService
+import ice.finance.service.{CommissionCalculatorService, RowValidatorService}
 
 object Main extends IOApp.Simple {
   def run =
-    StreamingApp.stream(RowValidatorService())
+    StreamingApp.stream(RowValidatorService(), CommissionCalculatorService())
 }
