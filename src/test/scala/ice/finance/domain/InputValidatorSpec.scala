@@ -17,6 +17,17 @@ class InputValidatorSpec extends AnyWordSpec {
         result mustBe ServiceDetails(1111, BigDecimal(0))
       }
     }
+
+    "return multiple errors" when {
+      "more than one exists" in {
+        val Left(errors) = InputValidator("not a valid type", "-20000").validate
+        errors.toList should contain theSameElementsAs List(
+          s"[serviceId=not a valid type] serviceId should be an integer",
+          s"[serviceId=not a valid type] -20000 is invalid, total amount should be in the range of 0 to a million"
+        )
+      }
+    }
+
     "return errors" when {
       "service id is an invalid type" in {
         val Left(error) = InputValidator("not a valid type", "20000").validate
