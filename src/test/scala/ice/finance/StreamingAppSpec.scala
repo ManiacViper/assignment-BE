@@ -3,7 +3,7 @@ package ice.finance
 import cats.effect.IO
 import fs2.io.file.{Files, Path}
 import ice.finance.repository.FileReaderRepository
-import ice.finance.service.{CommissionCalculatorService, RowValidatorService}
+import ice.finance.service.{CommissionCalculatorService, InputValidatorService}
 import weaver._
 
 object StreamingAppSpec extends SimpleIOSuite {
@@ -17,7 +17,7 @@ object StreamingAppSpec extends SimpleIOSuite {
           "test-services.csv",
           resultsFile,
           FileReaderRepository(),
-          RowValidatorService(),
+          InputValidatorService(),
           CommissionCalculatorService()
         )
       results <- StreamingAppSpec.readResults(resultsFile).compile.toList

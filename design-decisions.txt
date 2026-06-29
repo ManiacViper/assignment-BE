@@ -8,8 +8,8 @@ as the domain holds all the useful business fields, it should also contain any r
 the above makes it easier to check all the rules in one location and to test purely the business logic easily without other technical mechanisms as noise
 
 - service package added (should not depend on stream)
-we can add services here that can hold together other services and/or repositories that we need to call
-this package ensures all services are bundled together
+we can add services here that can hold together other future services and/or repositories that we would need to call
+this package ensures all services are bundled together and have flexibility as requirements get added
 
 - repository package added (should not depend on domain or service package classes)
 so we can have a location to have all classes that deal access or updates to the data for the app

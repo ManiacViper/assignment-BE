@@ -3,7 +3,7 @@ package ice.finance
 import cats.effect.IO
 import fs2.io.file.{Files, Path}
 import ice.finance.repository.FileReaderRepository
-import ice.finance.service.{CommissionCalculatorService, RowValidatorService}
+import ice.finance.service.{CommissionCalculatorService, InputValidatorService}
 import fs2.{Stream, text}
 
 object StreamingApp {
@@ -11,13 +11,13 @@ object StreamingApp {
     inputFilePath: String,
     resultsFilePath: String,
     fileReaderRepository: FileReaderRepository,
-    rowValidatorService: RowValidatorService,
+    inputValidatorService: InputValidatorService,
     commissionCalculatorService: CommissionCalculatorService
   ): IO[Unit] = {
     val calculatedCommissionsStream: Stream[IO, String] = fileReaderRepository
       .getLines(inputFilePath)
       .map { row =>
-        rowValidatorService
+        inputValidatorService
           .validateRow(row.clientId, row.serviceId, row.totalAmount)
       }
       .flatMap {
@@ -27,12 +27,6 @@ object StreamingApp {
           Stream.emit(value)
       }
       .map(commissionCalculatorService.getCalculation)
-      .flatMap {
-        case Left(error: String) =>
-          Stream.exec(IO.println(s"Calculation error=$error"))
-        case Right(value) =>
-          Stream.emit(value)
-      }
       .map { calculated =>
         s"${calculated.id},${calculated.commissionAmount}"
       }

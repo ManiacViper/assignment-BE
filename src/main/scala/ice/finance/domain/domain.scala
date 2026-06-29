@@ -1,27 +1,27 @@
 package ice.finance.domain
-//TODO: totalAmount to be BigDecimal
-case class ServiceDetails(clientId: String, id: Long, totalAmount: Int)
+
+import scala.language.implicitConversions
+import scala.math.BigDecimal.RoundingMode.HALF_EVEN
+
+object BigDecimalConfig {
+  implicit def bigDecimal(bigDecimal: BigDecimal): BigDecimal = bigDecimal.setScale(16, HALF_EVEN)
+}
+
+case class ServiceDetails(clientId: String, id: Long, totalAmount: BigDecimal)
 case class ServiceCommissionCalculated(clientId: String, id: Long, commissionAmount: BigDecimal)
-case class CommissionCalculator(totalAmount: Int) {
+case class CommissionCalculator(totalAmount: BigDecimal) {
   private val rate = totalAmount match {
     case value if value <= 1000 =>
-      10
+      BigDecimal(10)
     case value if value > 1000 && value <= 3000 =>
-      5
+      BigDecimal(5)
     case value if value > 3000 && value <= 1000000 =>
-      1
+      BigDecimal(1)
   }
   def calculate: BigDecimal =
-    BigDecimal(rate) / BigDecimal(100) * BigDecimal(totalAmount)
+    rate / 100 * totalAmount
 }
 object CommissionCalculator {
-  def fromTotalAmount(amount: Int): Either[String, CommissionCalculator] =
-    amount match {
-      case value if value < 0 =>
-        Left(s"$amount is invalid, amount should be in the range of 0 to a million")
-      case value if value > 1000000 =>
-        Left(s"$amount is invalid, amount should be in the range of 0 to a million")
-      case value =>
-        Right(CommissionCalculator(value))
-    }
+  def fromTotalAmount(amount: BigDecimal): CommissionCalculator =
+    CommissionCalculator(amount)
 }
