@@ -12,3 +12,5 @@ metals.sbt
 .env
 
 .scala-build
+
+calculated.csv

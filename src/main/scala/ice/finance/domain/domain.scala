@@ -1,8 +1,6 @@
 package ice.finance.domain
-case class ServiceDetails(
-                          id: Long,
-                          totalAmount: Int)
-case class ServiceCommissionsCalculated(id: Long, commissionAmount: Int)
+case class ServiceDetails(clientId: String, id: Long, totalAmount: Int)
+case class ServiceCommissionCalculated(clientId: String, id: Long, commissionAmount: BigDecimal)
 case class CommissionCalculator(totalAmount: Int) {
   private val rate = totalAmount match {
     case value if value <= 1000 =>
