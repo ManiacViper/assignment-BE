@@ -14,3 +14,4 @@ metals.sbt
 .scala-build
 
 calculated.csv
+test-calculated-output.csv
