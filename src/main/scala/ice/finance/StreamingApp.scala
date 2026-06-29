@@ -8,11 +8,13 @@ import fs2.{Stream, text}
 
 object StreamingApp {
   def stream(
+    inputFilePath: String,
+    fileReaderRepository: FileReaderRepository,
     rowValidatorService: RowValidatorService,
     commissionCalculatorService: CommissionCalculatorService
   ): IO[Unit] = {
-    val calculatedCommissionsStream = FileReaderRepository("services.csv")
-      .getLines()
+    val calculatedCommissionsStream = fileReaderRepository
+      .getLines(inputFilePath)
       .map { row =>
         rowValidatorService
           .validateRow(row.clientId, row.serviceId, row.totalAmount)

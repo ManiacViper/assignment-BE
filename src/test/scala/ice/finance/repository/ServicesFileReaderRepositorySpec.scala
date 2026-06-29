@@ -3,20 +3,20 @@ package ice.finance.repository
 import weaver._
 
 object ServicesFileReaderRepositorySpec extends SimpleIOSuite {
-
+  val fileName = "test-services.csv"
   test("should read the lines in the file") {
-    val fileReader = FileReaderRepository("test-services.csv")
+    val fileReader = FileReaderRepository()
     for {
-      result <- fileReader.getLines().compile.count
+      result <- fileReader.getLines(fileName).compile.count
     } yield expect.eql(result, 2)
   }
 
   test("return error when file does not exist") {
     val fileName   = "non-existing-file.csv"
-    val fileReader = FileReaderRepository(fileName)
+    val fileReader = FileReaderRepository()
 
     fileReader
-      .getLines()
+      .getLines(fileName)
       .compile
       .toList
       .attempt
