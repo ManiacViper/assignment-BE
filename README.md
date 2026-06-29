@@ -1,4 +1,4 @@
-# ICE Take-home assignment - Senior Fullstack Engineer – Finance - Backend
+# Take-home assignment - Backend
 
 Imagine you work for a company that offers an intermediary service and you are part of the team responsible for
 calculating commissions for clients.
