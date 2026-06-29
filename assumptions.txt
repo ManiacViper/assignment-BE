@@ -1,7 +1,7 @@
 assumptions
 - each file is a representation of a client and its services
 - each row of the input file has client id, service id and total amount
-- total amount cannot be zero
+- service id cannot be zero
 - assuming the list will be provided to the system via a csv file and the order of the columns will be the same each time
 - client id should be tracked for along with service id in case of errors to correctly identify the row that has them
 

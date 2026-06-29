@@ -52,18 +52,22 @@ case class InputValidator(clientId: String, serviceId: String, totalAmount: Stri
   private val validateTotalAmount: Either[NonEmptyList[String], CalculationBigDecimal] = for {
     amountConverted <- Either
       .catchNonFatal(BigDecimal(totalAmount))
-      .leftMap(_ => NonEmptyList.one(s"totalAmount=$totalAmount, should be an integer"))
+      .leftMap(_ =>
+        NonEmptyList.one(
+          s"[clientId=${clientId},serviceId=${serviceId}] totalAmount=$totalAmount, should be an integer"
+        )
+      )
     validatedAmount <- amountConverted match {
       case value if value < 0 =>
         Left(
           NonEmptyList.one(
-            s"$value is invalid, total amount should be in the range of 0 to a million"
+            s"[clientId=${clientId},serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
           )
         )
       case value if value > 1000000 =>
         Left(
           NonEmptyList.one(
-            s"$value is invalid, total amount should be in the range of 0 to a million"
+            s"[clientId=${clientId},serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
           )
         )
       case value =>
@@ -74,11 +78,17 @@ case class InputValidator(clientId: String, serviceId: String, totalAmount: Stri
   private val validateServiceId: Either[NonEmptyList[String], Long] = for {
     serviceIdConverted <- Either
       .catchNonFatal(serviceId.toLong)
-      .leftMap(_ => NonEmptyList.one(s"serviceId=$serviceId, should be an integer"))
+      .leftMap(_ =>
+        NonEmptyList.one(
+          s"[clientId=${clientId},serviceId=${serviceId}] serviceId should be an integer"
+        )
+      )
     validatedServiceId <- Either.cond(
       serviceIdConverted > 0,
       serviceIdConverted,
-      NonEmptyList.one(s"serviceId=$serviceIdConverted, should be a positive integer and non zero")
+      NonEmptyList.one(
+        s"[clientId=${clientId},serviceId=$serviceIdConverted] serviceId should be a positive integer and non zero"
+      )
     )
   } yield validatedServiceId
 
