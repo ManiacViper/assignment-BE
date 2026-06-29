@@ -31,3 +31,43 @@ the commissions will be:
 - (1) 90
 - (2) 100
 - (3) 40
+
+## Building and Running the Application
+
+This project is built using **SBT (Scala Build Tool)** and targets the Scala ecosystem. It leverages functional architectures via **Cats Effect 3** and **FS2 (Functional Streams for Scala)** for handling non-blocking file I/O operations.
+
+### Prerequisites
+
+Before building or running the application, ensure you have the following installed on your system:
+
+* **JDK:** Version 21 .
+* **Scala:** Version 2.13.12.
+* **SBT:** Version 1.9.6.
+
+Verify your local installation context using your terminal:
+```bash
+java -version
+sbt --version
+```
+
+### Clean, Compile, and Test Workspace
+# Remove cached artifacts and target directories
+```bash
+sbt clean
+```
+
+# Compile application source code
+```bash
+sbt compile
+```
+
+# Run the test suite (e.g., StreamingAppSpec)
+```bash
+sbt test
+```
+
+# Run with default
+```bash
+sbt run
+```
+which will produce `calculated.csv` in the root of the application with the service ids and the associated calculated commissions 
