@@ -14,25 +14,25 @@ class CommissionCalculatorSpec extends AnyWordSpec {
         val resultOne = CommissionCalculator(BigDecimal(900)).calculate.bigDecimal
         val resultTwo = CommissionCalculator(BigDecimal(1000)).calculate.bigDecimal
 
-        zero mustBe 0.0
-        resultOne mustBe 90.00
-        resultTwo mustBe 100.00
+        zero mustBe 0.0000000
+        resultOne mustBe 90.000000
+        resultTwo mustBe 100.000000
       }
 
       "its more than 1000 and equal or under 3000 it should apply 5% commission" in {
         val resultOne = CommissionCalculator(BigDecimal(2001)).calculate.bigDecimal
-        val resultTwo = CommissionCalculator(BigDecimal(3000)).calculate.bigDecimal
+        val resultTwo = CommissionCalculator(BigDecimal(2999.123456)).calculate.bigDecimal
 
-        resultOne mustBe 100.05
-        resultTwo mustBe 150.00
+        resultOne mustBe 100.050000
+        resultTwo mustBe 149.956173
       }
 
       "its more than 3000 and equal or under a million it should apply 1% commission" in {
         val resultOne = CommissionCalculator(BigDecimal(3001)).calculate.bigDecimal
         val resultTwo = CommissionCalculator(BigDecimal(1000000)).calculate.bigDecimal
 
-        resultOne mustBe 30.01
-        resultTwo mustBe 10000.00
+        resultOne mustBe 30.010000
+        resultTwo mustBe 10000.000000
       }
 
       "amount is a negative number, apply 0% commission" in {
