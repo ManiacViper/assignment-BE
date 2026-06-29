@@ -17,3 +17,5 @@ so we can have a location to have all classes that deal with access or writes to
 
 - streaming app
 this class wires the different parts of the app in a streaming app
+
+- using scala test as its the test descriptions are more closer to sentences for me but i have used weaver also in some tests
