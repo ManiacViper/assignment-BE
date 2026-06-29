@@ -11,7 +11,6 @@ object CommissionCalculatorService {
       service: ServiceDetails
     ): ServiceCommissionCalculated =
       ServiceCommissionCalculated(
-        service.clientId,
         service.id,
         CommissionCalculator
           .fromTotalAmount(service.totalAmount)

@@ -19,9 +19,8 @@ object CalculationBigDecimal {
   }
 }
 
-case class ServiceDetails(clientId: String, id: Long, totalAmount: CalculationBigDecimal)
+case class ServiceDetails(id: Long, totalAmount: CalculationBigDecimal)
 case class ServiceCommissionCalculated(
-  clientId: String,
   id: Long,
   commissionAmount: CalculationBigDecimal
 )
@@ -47,27 +46,27 @@ object CommissionCalculator {
     CommissionCalculator(amount)
 }
 
-case class InputValidator(clientId: String, serviceId: String, totalAmount: String) {
+case class InputValidator(serviceId: String, totalAmount: String) {
   import CalculationBigDecimal.calculationBigDecimal
   private val validateTotalAmount: Either[NonEmptyList[String], CalculationBigDecimal] = for {
     amountConverted <- Either
       .catchNonFatal(BigDecimal(totalAmount))
       .leftMap(_ =>
         NonEmptyList.one(
-          s"[clientId=${clientId},serviceId=${serviceId}] totalAmount=$totalAmount, should be an integer"
+          s"[serviceId=${serviceId}] totalAmount=$totalAmount, should be an integer"
         )
       )
     validatedAmount <- amountConverted match {
       case value if value < 0 =>
         Left(
           NonEmptyList.one(
-            s"[clientId=${clientId},serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
+            s"[serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
           )
         )
       case value if value > 1000000 =>
         Left(
           NonEmptyList.one(
-            s"[clientId=${clientId},serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
+            s"[serviceId=${serviceId}] $value is invalid, total amount should be in the range of 0 to a million"
           )
         )
       case value =>
@@ -80,14 +79,14 @@ case class InputValidator(clientId: String, serviceId: String, totalAmount: Stri
       .catchNonFatal(serviceId.toLong)
       .leftMap(_ =>
         NonEmptyList.one(
-          s"[clientId=${clientId},serviceId=${serviceId}] serviceId should be an integer"
+          s"[serviceId=${serviceId}] serviceId should be an integer"
         )
       )
     validatedServiceId <- Either.cond(
       serviceIdConverted > 0,
       serviceIdConverted,
       NonEmptyList.one(
-        s"[clientId=${clientId},serviceId=$serviceIdConverted] serviceId should be a positive integer and non zero"
+        s"[serviceId=$serviceIdConverted] serviceId should be a positive integer and non zero"
       )
     )
   } yield validatedServiceId
@@ -97,7 +96,7 @@ case class InputValidator(clientId: String, serviceId: String, totalAmount: Stri
       validateServiceId,
       validateTotalAmount
     ).parMapN { case (serviceId, totalAmount) =>
-      ServiceDetails(clientId, serviceId, totalAmount.bigDecimal)
+      ServiceDetails(serviceId, totalAmount.bigDecimal)
     }
 
 }

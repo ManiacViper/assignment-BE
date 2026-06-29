@@ -1,14 +1,11 @@
 assumptions
 - each file is a representation of a client and its services
-- every client has an id
-- each row of the input file has client id, service id and total amount
+- each row of the input file has service id and total amount
 - service id cannot be zero
-- assuming the list will be provided to the system via a csv file and the order of the columns will be the same each time
-- client id should be tracked for along with service id in case of errors to correctly identify the row that has them
 
 simplifications
-- reading the services.csv file from the app itself but in the real app,
-    in the future it could have a mechanism to retrieve the input data from a remote storage like S3 or something similar
+- reading the services.csv file from the app itself but in the real app
+   it could have a mechanism to listen to a kafka topic for an event (which would represent the services and total amounts for a client)
 - errors are being logged but we could have a dead letter queue in the future
 - will assume the columns are in order always in the csv file
 - logging results but in the real app we would write it somewhere in remote storage
