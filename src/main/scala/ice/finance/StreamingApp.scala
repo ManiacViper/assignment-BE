@@ -21,8 +21,8 @@ object StreamingApp {
           .validateRow(row.clientId, row.serviceId, row.totalAmount)
       }
       .flatMap {
-        case Left(error: String) =>
-          Stream.exec(IO.println(s"File row error=$error"))
+        case Left(errors) => // TODO: client id and service id to be shown for errors
+          Stream.exec(IO.println(s"File row errors=${errors.toList.mkString(",")}"))
         case Right(value) =>
           Stream.emit(value)
       }

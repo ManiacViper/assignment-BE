@@ -1,8 +1,11 @@
 package ice.finance.domain
 
+import cats.data.NonEmptyList
+
 import scala.language.implicitConversions
 import scala.math.BigDecimal.RoundingMode.HALF_EVEN
 import cats.syntax.either._
+import cats.syntax.parallel._
 
 object BigDecimalConfig {
   implicit def bigDecimal(bigDecimal: BigDecimal): BigDecimal = bigDecimal.setScale(16, HALF_EVEN)
@@ -28,34 +31,45 @@ object CommissionCalculator {
 }
 
 case class InputValidator(clientId: String, serviceId: String, totalAmount: String) {
-  private val validateTotalAmount = for {
+  private val validateTotalAmount: Either[NonEmptyList[String], BigDecimal] = for {
     amountConverted <- Either
       .catchNonFatal(BigDecimal(totalAmount))
-      .leftMap(_ => s"totalAmount=$totalAmount, should be an integer")
+      .leftMap(_ => NonEmptyList.one(s"totalAmount=$totalAmount, should be an integer"))
     validatedAmount <- amountConverted match {
       case value if value < 0 =>
-        Left(s"$value is invalid, total amount should be in the range of 0 to a million")
+        Left(
+          NonEmptyList.one(
+            s"$value is invalid, total amount should be in the range of 0 to a million"
+          )
+        )
       case value if value > 1000000 =>
-        Left(s"$value is invalid, total amount should be in the range of 0 to a million")
+        Left(
+          NonEmptyList.one(
+            s"$value is invalid, total amount should be in the range of 0 to a million"
+          )
+        )
       case value =>
         Right(value)
     }
   } yield validatedAmount
 
-  private val validateServiceId: Either[String, Long] = for {
+  private val validateServiceId: Either[NonEmptyList[String], Long] = for {
     serviceIdConverted <- Either
       .catchNonFatal(serviceId.toLong)
-      .leftMap(_ => s"serviceId=$serviceId, should be an integer")
+      .leftMap(_ => NonEmptyList.one(s"serviceId=$serviceId, should be an integer"))
     validatedServiceId <- Either.cond(
       serviceIdConverted > 0,
       serviceIdConverted,
-      s"serviceId=$serviceIdConverted, should be a positive integer and non zero"
+      NonEmptyList.one(s"serviceId=$serviceIdConverted, should be a positive integer and non zero")
     )
   } yield validatedServiceId
 
-  def validate: Either[String, ServiceDetails] = for {
-    serviceId   <- validateServiceId
-    totalAmount <- validateTotalAmount
-  } yield ServiceDetails(clientId, serviceId, totalAmount)
+  def validate: Either[NonEmptyList[String], ServiceDetails] =
+    (
+      validateServiceId,
+      validateTotalAmount
+    ).parMapN { case (serviceId, totalAmount) =>
+      ServiceDetails(clientId, serviceId, totalAmount)
+    }
 
 }

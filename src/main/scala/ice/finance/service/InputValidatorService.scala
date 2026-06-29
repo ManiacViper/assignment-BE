@@ -1,14 +1,14 @@
 package ice.finance.service
 
+import cats.data.NonEmptyList
 import ice.finance.domain.{InputValidator, ServiceDetails}
-import cats.syntax.either._
 
 trait InputValidatorService {
   def validateRow(
     clientId: String,
     serviceId: String,
     totalAmount: String
-  ): Either[String, ServiceDetails]
+  ): Either[NonEmptyList[String], ServiceDetails]
 }
 
 object InputValidatorService {
@@ -17,7 +17,7 @@ object InputValidatorService {
       clientId: String,
       serviceId: String,
       totalAmount: String
-    ): Either[String, ServiceDetails] =
+    ): Either[NonEmptyList[String], ServiceDetails] =
       InputValidator(clientId, serviceId, totalAmount).validate
   }
 
