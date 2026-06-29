@@ -1,11 +1,16 @@
+- as there is no explicit requirement for immediate realtime responses, file processing via streaming has been added for this app
+as the input list is coming from a team inside the company, there is flexibility to change this into kafka topics (for both input and results)
+for near realtime performance if needed where each message would be a client's list of service ids and amounts
+
 - domain package added  (should not depend on service or repository package classes)
 so we have all the business domain classes here
 these domain classes will hold useful business fields and rules and have no concern over technical mechanisms
 this makes it easier to seperate them from dto objects for either db or rest api that exist solely for data transfer
 
-- calculation of commission in domain
 as the domain holds all the useful business fields, it should also contain any rules related to the business like calculations
 the above makes it easier to check all the rules in one location and to test purely the business logic easily without other technical mechanisms as noise
+
+this also means that rules for input validation will be in domain also as they are business rules
 
 - service package added (should not depend on stream)
 we can add services here that can hold together other future services and/or repositories that we would need to call

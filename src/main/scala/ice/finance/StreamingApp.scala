@@ -16,19 +16,25 @@ object StreamingApp {
   ): IO[Unit] = {
     val calculatedCommissionsStream: Stream[IO, String] = fileReaderRepository
       .getLines(inputFilePath)
+      .flatMap {
+        case Left(error) =>
+          Stream.exec(IO.println(s"File error=$error"))
+        case Right(value) =>
+          Stream.emit(value)
+      }
       .map { row =>
         inputValidatorService
-          .validateRow(row.clientId, row.serviceId, row.totalAmount)
+          .validateRow(row.serviceId, row.totalAmount)
       }
       .flatMap {
-        case Left(errors) => // TODO: client id and service id to be shown for errors
-          Stream.exec(IO.println(s"File row errors=${errors.toList.mkString(",")}"))
+        case Left(errors) =>
+          Stream.exec(IO.println(s"invalid data errors=${errors.toList.mkString(",")}"))
         case Right(value) =>
           Stream.emit(value)
       }
       .map(commissionCalculatorService.getCalculation)
       .map { calculated =>
-        s"${calculated.id},${calculated.commissionAmount}"
+        s"${calculated.id},${calculated.commissionAmount.bigDecimal}"
       }
       .intersperse("\n")
 
