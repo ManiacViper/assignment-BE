@@ -3,8 +3,8 @@ package ice.finance.repository
 import weaver._
 
 object ServicesFileReaderRepositorySpec extends SimpleIOSuite {
-  val fileName = "test-services.csv"
   test("should read the lines in the file") {
+    val fileName   = "test-services.csv"
     val fileReader = FileReaderRepository()
     for {
       result <- fileReader.getLines(fileName).compile.count

@@ -9,11 +9,12 @@ import fs2.{Stream, text}
 object StreamingApp {
   def stream(
     inputFilePath: String,
+    resultsFilePath: String,
     fileReaderRepository: FileReaderRepository,
     rowValidatorService: RowValidatorService,
     commissionCalculatorService: CommissionCalculatorService
   ): IO[Unit] = {
-    val calculatedCommissionsStream = fileReaderRepository
+    val calculatedCommissionsStream: Stream[IO, String] = fileReaderRepository
       .getLines(inputFilePath)
       .map { row =>
         rowValidatorService
@@ -33,13 +34,13 @@ object StreamingApp {
           Stream.emit(value)
       }
       .map { calculated =>
-        s"${calculated.clientId},${calculated.id},${calculated.commissionAmount}\n"
+        s"${calculated.id},${calculated.commissionAmount}"
       }
+      .intersperse("\n")
 
-    val csvHeadersStream = Stream.emit("client_id,calculated_id,commission_amount\n")
-    (csvHeadersStream ++ calculatedCommissionsStream)
+    calculatedCommissionsStream
       .through(text.utf8.encode)
-      .through(Files[IO].writeAll(Path("calculated.csv")))
+      .through(Files[IO].writeAll(Path(resultsFilePath)))
       .compile
       .drain
   }

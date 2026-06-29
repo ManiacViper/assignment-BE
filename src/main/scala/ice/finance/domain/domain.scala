@@ -1,4 +1,5 @@
 package ice.finance.domain
+//TODO: totalAmount to be BigDecimal
 case class ServiceDetails(clientId: String, id: Long, totalAmount: Int)
 case class ServiceCommissionCalculated(clientId: String, id: Long, commissionAmount: BigDecimal)
 case class CommissionCalculator(totalAmount: Int) {

@@ -8,6 +8,7 @@ object Main extends IOApp.Simple {
   def run =
     StreamingApp.stream(
       "services.csv",
+      "calculated.csv",
       FileReaderRepository(),
       RowValidatorService(),
       CommissionCalculatorService()

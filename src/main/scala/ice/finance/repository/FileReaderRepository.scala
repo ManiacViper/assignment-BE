@@ -18,10 +18,10 @@ object FileReaderRepository {
         .through(text.utf8.decode)
         .through(text.lines)
         .map { row =>
-          val Array(clientId, serviceId, totalAmount) = row.split(",")
+          val Array(clientId, serviceId, totalAmount) =
+            row.split(",") // TODO: validate this correctly
           RawRow(clientId, serviceId, totalAmount)
         }
-        .drop(1)
     }
   }
 }
