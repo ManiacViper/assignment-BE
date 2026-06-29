@@ -1,13 +1,12 @@
 package ice.finance.service
 
 import ice.finance.domain.{CommissionCalculator, ServiceCommissionCalculated, ServiceDetails}
-import ice.finance.domain.BigDecimalConfig._
 trait CommissionCalculatorService {
   def getCalculation(services: ServiceDetails): ServiceCommissionCalculated
 }
 
 object CommissionCalculatorService {
-  def apply() = new CommissionCalculatorService {
+  def apply(): CommissionCalculatorService = new CommissionCalculatorService {
     override def getCalculation(
       service: ServiceDetails
     ): ServiceCommissionCalculated =
@@ -17,6 +16,7 @@ object CommissionCalculatorService {
         CommissionCalculator
           .fromTotalAmount(service.totalAmount)
           .calculate
+          .bigDecimal
       )
   }
 }

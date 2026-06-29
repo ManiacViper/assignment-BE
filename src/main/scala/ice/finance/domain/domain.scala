@@ -3,35 +3,53 @@ package ice.finance.domain
 import cats.data.NonEmptyList
 
 import scala.language.implicitConversions
-import scala.math.BigDecimal.RoundingMode.HALF_EVEN
 import cats.syntax.either._
 import cats.syntax.parallel._
 
-object BigDecimalConfig {
-  implicit def bigDecimal(bigDecimal: BigDecimal): BigDecimal = bigDecimal.setScale(16, HALF_EVEN)
+import java.math.{MathContext, RoundingMode}
+
+final case class CalculationBigDecimal(bigDecimal: BigDecimal) extends AnyVal
+object CalculationBigDecimal {
+  private val precision       = 12
+  private val scale           = 6
+  private val mc: MathContext = new MathContext(precision, RoundingMode.HALF_EVEN)
+  implicit def calculationBigDecimal(value: BigDecimal): CalculationBigDecimal = {
+    val scaledValue: BigDecimal = value.setScale(scale, math.BigDecimal.RoundingMode.HALF_EVEN)
+    CalculationBigDecimal(new BigDecimal(scaledValue.bigDecimal, mc))
+  }
 }
 
-case class ServiceDetails(clientId: String, id: Long, totalAmount: BigDecimal)
-case class ServiceCommissionCalculated(clientId: String, id: Long, commissionAmount: BigDecimal)
-case class CommissionCalculator(totalAmount: BigDecimal) {
-  private val rate = totalAmount match {
-    case value if value <= 1000 =>
-      BigDecimal(10)
+case class ServiceDetails(clientId: String, id: Long, totalAmount: CalculationBigDecimal)
+case class ServiceCommissionCalculated(
+  clientId: String,
+  id: Long,
+  commissionAmount: CalculationBigDecimal
+)
+case class CommissionCalculator(totalAmount: CalculationBigDecimal) {
+
+  import CalculationBigDecimal.calculationBigDecimal
+
+  private val rate: CalculationBigDecimal = totalAmount.bigDecimal match {
+    case value if value > 0 && value <= 1000 =>
+      CalculationBigDecimal(10)
     case value if value > 1000 && value <= 3000 =>
       BigDecimal(5)
     case value if value > 3000 && value <= 1000000 =>
       BigDecimal(1)
+    case _ =>
+      BigDecimal(0)
   }
-  def calculate: BigDecimal =
-    rate / 100 * totalAmount
+  def calculate: CalculationBigDecimal =
+    rate.bigDecimal / CalculationBigDecimal(100).bigDecimal * totalAmount.bigDecimal
 }
 object CommissionCalculator {
-  def fromTotalAmount(amount: BigDecimal): CommissionCalculator =
+  def fromTotalAmount(amount: CalculationBigDecimal): CommissionCalculator =
     CommissionCalculator(amount)
 }
 
 case class InputValidator(clientId: String, serviceId: String, totalAmount: String) {
-  private val validateTotalAmount: Either[NonEmptyList[String], BigDecimal] = for {
+  import CalculationBigDecimal.calculationBigDecimal
+  private val validateTotalAmount: Either[NonEmptyList[String], CalculationBigDecimal] = for {
     amountConverted <- Either
       .catchNonFatal(BigDecimal(totalAmount))
       .leftMap(_ => NonEmptyList.one(s"totalAmount=$totalAmount, should be an integer"))
@@ -69,7 +87,7 @@ case class InputValidator(clientId: String, serviceId: String, totalAmount: Stri
       validateServiceId,
       validateTotalAmount
     ).parMapN { case (serviceId, totalAmount) =>
-      ServiceDetails(clientId, serviceId, totalAmount)
+      ServiceDetails(clientId, serviceId, totalAmount.bigDecimal)
     }
 
 }

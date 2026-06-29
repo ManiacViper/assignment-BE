@@ -1,6 +1,5 @@
 package ice.finance.domain
 
-import cats.data.NonEmptyList
 import org.scalatest.matchers.must.Matchers.convertToAnyMustWrapper
 import org.scalatest.matchers.should.Matchers._
 import org.scalatest.wordspec.AnyWordSpec
@@ -12,11 +11,11 @@ class InputValidatorSpec extends AnyWordSpec {
     "convert to a service detail" when {
       "all fields are correct types" in {
         val Right(result) = InputValidator(clientId, "1111", "20000").validate
-        result mustBe ServiceDetails(clientId, 1111, 20000)
+        result mustBe ServiceDetails(clientId, 1111, BigDecimal(20000))
       }
       "total amount is 0" in {
         val Right(result) = InputValidator(clientId, "1111", "0").validate
-        result mustBe ServiceDetails(clientId, 1111, 0)
+        result mustBe ServiceDetails(clientId, 1111, BigDecimal(0))
       }
     }
     "return errors" when {

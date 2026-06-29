@@ -28,7 +28,7 @@ object StreamingApp {
       }
       .map(commissionCalculatorService.getCalculation)
       .map { calculated =>
-        s"${calculated.id},${calculated.commissionAmount}"
+        s"${calculated.id},${calculated.commissionAmount.bigDecimal}"
       }
       .intersperse("\n")
 

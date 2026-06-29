@@ -2,6 +2,7 @@ package ice.finance
 
 import cats.effect.IO
 import fs2.io.file.{Files, Path}
+import ice.finance.domain.CalculationBigDecimal
 import ice.finance.repository.FileReaderRepository
 import ice.finance.service.{CommissionCalculatorService, InputValidatorService}
 import weaver._
@@ -26,11 +27,11 @@ object StreamingAppSpec extends SimpleIOSuite {
         List(ActualResults(1L, BigDecimal(90.00)), ActualResults(2L, BigDecimal(100.00)))
       expect.same(results, expected)
     }
-
   }
 
-  private case class ActualResults(serviceId: Long, totalAmount: BigDecimal)
+  private case class ActualResults(serviceId: Long, totalAmount: CalculationBigDecimal)
   private def readResults(path: String) = {
+    import ice.finance.domain.CalculationBigDecimal.calculationBigDecimal
     Files[IO]
       .readUtf8Lines(Path(path))
       .map { line: String =>
