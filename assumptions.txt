@@ -1,5 +1,6 @@
 assumptions
 - each file is a representation of a client and its services
+- every client has an id
 - each row of the input file has client id, service id and total amount
 - service id cannot be zero
 - assuming the list will be provided to the system via a csv file and the order of the columns will be the same each time
