@@ -8,6 +8,8 @@ import weaver._
 
 object StreamingAppSpec extends SimpleIOSuite {
 
+  private val resultsFile = "src/test/resources/test-calculated-output.csv"
+
   test("should read raw data and write commission results") {
     for {
       _ <- StreamingApp
@@ -27,8 +29,6 @@ object StreamingAppSpec extends SimpleIOSuite {
 
   }
 
-  private val resultsFile = "src/test/resources/calculated_output.csv"
-
   private case class ActualResults(serviceId: Long, totalAmount: BigDecimal)
   private def readResults(path: String) = {
     Files[IO]
@@ -37,8 +37,8 @@ object StreamingAppSpec extends SimpleIOSuite {
         val Array(id, commissionAmount) = line.split(",")
         ActualResults(id.toLong, BigDecimal(commissionAmount))
       }
-//      .evalTap { _ =>
-//        Files[IO].deleteIfExists(Path(path))
-//      }
+      .evalTap { _ =>
+        Files[IO].deleteIfExists(Path(path))
+      }
   }
 }
