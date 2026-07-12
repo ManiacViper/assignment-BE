@@ -1,4 +1,5 @@
 assumptions
+- each service id will be unique, regardless of which client it belongs to 
 - each row of the input file has service id and total amount
 - service id cannot be zero
 - 6 scale is good enough accuracy and half_even rounding for decimal amounts for financial transactions
