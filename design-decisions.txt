@@ -1,3 +1,7 @@
+- csv files
+consuming and generating csv files is straight forward and quick which is perfect for prototypes. The main aim of the prototype is to calculate the commissions and have that in place regardless of how the data will be delivered or outputted. 
+We can replace the csv files with a technology that will be appropriate for the other team for us to receive the data and also how they want it delivered but this requires agreement between the teams and more time which for the prototype isnt necessary. 
+
 - domain package added  (should not depend any other packages or outside classes)
 so we have all the business domain classes here
 these domain classes will hold useful business fields and rules and have no concern over technical mechanisms
