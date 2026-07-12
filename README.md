@@ -34,7 +34,7 @@ the commissions will be:
 
 ## Building and Running the Application
 
-This project is built using **SBT (Scala Build Tool)** and targets the Scala ecosystem. It leverages functional architectures via **Cats Effect 3** and **FS2 (Functional Streams for Scala)** for handling non-blocking file I/O operations.
+This project is built using **SBT (Scala Build Tool)** and targets the Scala ecosystem. It leverages functional architectures via **Cats Effect** and **FS2 (Functional Streams for Scala)** for handling non-blocking file I/O operations.
 
 ### Prerequisites
 
