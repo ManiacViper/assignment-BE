@@ -1,5 +1,5 @@
 assumptions
-- each service id will be unique, regardless of which client it belongs to 
+- each service id will be unique, regardless of which client it belongs to (i.e service id cannot be repeated between clients)
 - one csv file will be used for multiple clients as service id is assumed to be unique and can be associated to a specific client
 - each row of the input file has service id and total amount
 - service id cannot be zero
