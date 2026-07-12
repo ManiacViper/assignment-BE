@@ -1,5 +1,6 @@
 assumptions
 - each service id will be unique, regardless of which client it belongs to 
+- one csv file will be used for multiple clients as service id is assumed to be unique
 - each row of the input file has service id and total amount
 - service id cannot be zero
 - 6 scale is good enough accuracy and half_even rounding for decimal amounts for financial transactions
