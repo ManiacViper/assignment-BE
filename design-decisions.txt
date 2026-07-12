@@ -20,6 +20,7 @@ this package ensures all services are bundled together and have flexibility as r
 so we can have a location to have all classes that deal with access or writes to the data for the app
 
 - streaming app
-this class wires the different parts of the app in a streaming app
+this class wires the different parts of the app in a streaming app, this could be an event based stream in the future, for now it read a file and outputs a file.
 
-- using scala test as its the test descriptions are more closer to sentences for me but i have used weaver also in some tests
+- scala test
+using scala test as the test descriptions are more closer to english sentences and easier to structure but used weaver also in some tests
