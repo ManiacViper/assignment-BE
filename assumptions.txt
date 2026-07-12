@@ -1,8 +1,7 @@
 assumptions
-- each file is a representation of a client and its services
 - each row of the input file has service id and total amount
 - service id cannot be zero
-- 6 scale is good enough accuracy and half_even rounding for decimal amounts
+- 6 scale is good enough accuracy and half_even rounding for decimal amounts for financial transactions
 
 simplifications
 - reading the services.csv file from the app itself but in the real app
